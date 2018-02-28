@@ -1,5 +1,5 @@
 #define IMAGE_NUMBER  2
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 8
 
 #include <stdio.h>
 #include <stdlib.h>
