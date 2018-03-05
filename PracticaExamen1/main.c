@@ -6,7 +6,6 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
-
 void cambiarColores(IplImage* image1, IplImage* image2);
 
 int main(int argc, char **argv) {
@@ -57,7 +56,6 @@ void cambiarColores(IplImage* image1, IplImage* image2) {
         unsigned char *pImg = (unsigned char *) image1->imageData + fila * image1->widthStep;
         unsigned char *pCopy = (unsigned char *) image2->imageData + fila * image2->widthStep;
 
-        printf("sd %d  %d \n", fila, image1->widthStep);
         for (columna = 0; columna < image1->width; columna++) {
             if (fila < image1->height / 2) {
                 if (columna < image1->width / 2) {
