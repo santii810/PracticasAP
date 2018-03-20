@@ -7,7 +7,7 @@
 #include <opencv/highgui.h>
 
 void degradar(IplImage* image1);
-void promocionar(IplImage* image1,IplImage* image1);
+void promocionar(IplImage* image1,IplImage* image2);
 
 int main(int argc, char **argv) {
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     for (i = 0; i < 255; i++) {
         promocionar(image1,image2);
         cvShowImage("Inicio", image1);
-        cvWaitKey(1);
+        cvWaitKey(0);
     }
     
 
@@ -58,5 +58,20 @@ void degradar(IplImage* image1) {
             if (*pImg1 > 0)
                 (*pImg1)--;
             *pImg1++;
+    }
+}
+void promocionar(IplImage* image1,IplImage* image2) {
+    int fila, columna;
+    for (fila = 0; fila < image1->height; fila++) {
+        unsigned char *pImg1 = (unsigned char *) image1->imageData + fila * image1->widthStep;
+        unsigned char *pImg2 = (unsigned char *) image2->imageData + fila * image2->widthStep;
+        for (columna = 0; columna < image1->width * 3; columna++) {
+            if (*pImg1 < *pImg2)
+                (*pImg1)++;
+            *pImg1++;
+            *pImg2++;
+           
+
+        }
     }
 }
