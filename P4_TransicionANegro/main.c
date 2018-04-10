@@ -156,7 +156,7 @@ void main_degradadoParalelismo(IplImage* image1) {
     int i, byte;
 
     for (i = 0; i <= 255; i++) {
-        __m128i *pImgAux = (__m128i *) (ImgAux->imageData);
+        __m128i *pImgAux = (__m128i*) (ImgAux->imageData);
         for (byte = 0; byte < ImgAux->imageSize; byte += 16) {
             __m128i A = _mm_loadu_si128(pImgAux);
             __m128i B = _mm_subs_epu8(A, unos);
