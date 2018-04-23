@@ -31,6 +31,7 @@ int compararBloques(int filaBloque1, int colBloque1, IplImage* imagen1, int fila
 void crearMosaico(IplImage* image1, IplImage* image2);
 int compararBloques2(int i, int j, IplImage* img1, int k, int l, IplImage* img2);
 void rellenarImagen(IplImage* image1, IplImage* image4c);
+void copiarBloque_Paralelo(int img1f, int img1c, IplImage *img1, int img2f, int img2c, IplImage * img2) ;
 
 int main(int argc, char** argv) {
     if (argc != (IMAGE_NUMBER + 1)) {
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
     IplImage* image4c2 = cvCreateImage(cvSize(image2->width, image2->height), image2->depth, 4);
     rellenarImagen(image1, image4c1);
     rellenarImagen(image2, image4c2);
-    
+
     clock_t start = clock();
     crearMosaico(image4c1, image4c2);
     printf("Tiempo transcurrido: %f", ((double) clock() - start) / CLOCKS_PER_SEC);
@@ -92,6 +93,21 @@ void sustituirBloque(int filaBloque1, int colBloque1, IplImage* imagen1, int fil
         }
     }
 }
+    void copiarBloque_Paralelo(int img1f, int img1c, IplImage *img1, int img2f, int img2c, IplImage * img2) {
+        int fila, columna;
+        __m128i A;
+        for (fila = 0; fila < BLOCK_SIZE; fila++) {
+            __m128i *a = (__m128i *) (img1->imageData + (img1f * BLOCK_SIZE + fila) * img1->widthStep + img1c * BLOCK_SIZE * 3);
+            __m128i *b = (__m128i *) (img2->imageData + (img2f * BLOCK_SIZE + fila) * img2->widthStep + img2c * BLOCK_SIZE * 3);
+            for (columna = 0; columna < 3; columna++) {
+                A = _mm_loadu_si128(a); //Puntero de la imagen original para crear
+                _mm_store_si128(b, A); //A la parte de la imagen destino(b) le metes el bloque destino (A)
+                b++;
+                a++;
+            }
+        }
+    }
+
 
 int compararBloques(int filaBloque1, int colBloque1, IplImage* imagen1, int filaBloque2, int colBloque2, IplImage* imagen2) {
     int fila, columna, diferencia = 0;
@@ -127,7 +143,9 @@ void crearMosaico(IplImage* image1, IplImage* image2) {
                     }
                 }
             }
-            sustituirBloque(i * BLOCK_SIZE, j * BLOCK_SIZE, image1, filaInicio * BLOCK_SIZE, columnaInicio * BLOCK_SIZE, image2);
+            //sustituirBloque(i * BLOCK_SIZE, j * BLOCK_SIZE, image1, filaInicio * BLOCK_SIZE, columnaInicio * BLOCK_SIZE, image2);
+            copiarBloque_Paralelo(i * BLOCK_SIZE, j * BLOCK_SIZE, image1, filaInicio * BLOCK_SIZE, columnaInicio * BLOCK_SIZE, image2) ;
+
         }
     }
 }

@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
 
     //main_degradarABit(image1);
     //main_degradarAPixel( image1, image2);
-    //main_convertirImagen(image1, image2);
-    main_degradadoParalelismo(image1);
+    main_convertirImagen(image1, image2);
+   // main_degradadoParalelismo(image1);
 
 
 
@@ -108,8 +108,6 @@ void convertir(IplImage* image1, IplImage* image2) {
                 (*pImg1)--;
             *pImg1++;
             *pImg2++;
-
-
         }
     }
 }
